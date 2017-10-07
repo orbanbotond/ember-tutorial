@@ -2,5 +2,16 @@
   "name": "An ember tutorial app.",
   "description": "Simple",
   "repository": "https://github.com/orbanbotond/ember-tutorial",
-  "keywords": ["ember", "node", "js"]
+  "keywords": ["ember", "node", "js"],
+  "buildpacks": [
+    {
+      "url": "https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/emberjs.tgz"
+    }
+  ],
+  "env": {
+    "GOOGLE_MAPS_API_KEY": {
+      "description": "Google API KEY for Google Maps, https://developers.google.com/maps/documentation/javascript/get-api-key",
+      "required": true
+    }
+  }
 }
