@@ -1,29 +1,25 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import RSVP from 'rsvp';
-
-const ITEMS = [{city: 'San Francisco'}, {city: 'Portland'}, {city: 'Seattle'}];
-const FILTERED_ITEMS = [{city: 'San Francisco'}];
+import wait from 'ember-test-helpers/wait';
 
 moduleForComponent('list-filter', 'Integration | Component | list filter', {
   integration: true
 });
 
+const ITEMS = [{city: 'San Francisco'}, {city: 'Portland'}, {city: 'Seattle'}];
+const FILTERED_ITEMS = [{city: 'San Francisco'}];
+
 test('should initially load all listings', function (assert) {
-  // we want our actions to return promises,
-  //since they are potentially fetching data asynchronously
+  assert.expect(2);
   this.on('filterByCity', () => {
     return RSVP.resolve({ results: ITEMS });
   });
 
-  // with an integration test,
-  // you can set up and use your component in the same way your application
-  // will use it.
   this.render(hbs`
-    {{#list-filter filter=(action 'filterByCity') as |results|}}
+    {{#list-filter filter=(action 'filterByCity') as |rentals|}}
       <ul>
-      {{#each results as |item|}}
+      {{#each rentals as |item|}}
         <li class="city">
           {{item.city}}
         </li>
@@ -36,24 +32,6 @@ test('should initially load all listings', function (assert) {
     assert.equal(this.$('.city').length, 3);
     assert.equal(this.$('.city').first().text().trim(), 'San Francisco');
   });
-});
-
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
-  this.render(hbs`{{list-filter}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#list-filter}}
-      template block text
-    {{/list-filter}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
 });
 
 test('should update with matching listings', function (assert) {
@@ -70,9 +48,9 @@ test('should update with matching listings', function (assert) {
   });
 
   this.render(hbs`
-    {{#list-filter filter=(action 'filterByCity') as |results|}}
+    {{#list-filter filter=(action 'filterByCity') as |rentals|}}
       <ul>
-      {{#each results as |item|}}
+      {{#each rentals as |item|}}
         <li class="city">
           {{item.city}}
         </li>
@@ -81,7 +59,6 @@ test('should update with matching listings', function (assert) {
     {{/list-filter}}
   `);
 
-  // The keyup event here should invoke an action that will cause the list to be filtered
   this.$('.list-filter input').val('San').keyup();
 
   return wait().then(() => {
